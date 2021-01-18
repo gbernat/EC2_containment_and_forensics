@@ -50,7 +50,7 @@ optional arguments:
                         containing all forensic files)
 ```
 
-* Script exapmple usage and output:
+* Usage script example and output:
 ```cmd
 $ python3 containmentAndForensicsEC2ToS3_lambda.py -id i-4857abcd0957dc81a --no-memory-dump --no-ami-snapshot --conserve-local-forensics
 
