@@ -5,7 +5,7 @@ Artifacts are detailed in a separate artifacs.json file (Wildcards are allowed t
 In addition, preserves AMI/EBS snapshot and executes EC2 instance containment procedure.<br>
 <br>
 # Architecture
-![](https://github.com/gbernat/EC2_containment_and_forensics/blob/master/forensics_arch_black.PNG)
+![](https://github.com/gbernat/EC2_containment_and_forensics/blob/master/forensics_architecture_black.PNG)
 
 * Example Config file on S3
 ```json
