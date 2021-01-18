@@ -1,8 +1,8 @@
 # EC2_containment_and_forensics
-Retrieve artifacts like files and commands output from a vulnerated remote EC2 Linux server, and perform a memory dump.<br>
+Remotely retrieves artifacts like files and commands output from a vulnerated EC2 Linux server, and performs a memory dump.<br>
 Everything collected is sent compressed to an S3 bucket.<br>
-Artifacts are described in artifacs.json file (Wildcards are allowed to filenames and directories).<br>
-In addition preserves AMI/EBS snapshot and executes EC2 instance containment procedure.<br>
+Artifacts are detailed in a separate artifacs.json file (Wildcards are allowed to filenames and directories). Resources files (for example artifacs.json) are taken from S3.<br>
+In addition, preserves AMI/EBS snapshot and executes EC2 instance containment procedure.<br>
 <br>
 * Example Config file on S3
 ```json
@@ -101,9 +101,9 @@ Tagging instance id i-4857abcd0957dc81a as Security_status: quarantined
 
 Done!
 ```
-<br>
+
 * AWS required permissions:
-> S3: GetObjet y PutObject
+> S3: GetObjet y PutObject<br>
 > EC2: DescribeInstances, CreateTags, CreateSnapshot, ModifyInstanceAttribute
 
 
