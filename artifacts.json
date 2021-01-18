@@ -1,0 +1,61 @@
+[
+  {
+    "name": "HostnameCommand",
+    "type": "COMMAND",
+    "attributes": [
+      "cat",
+      "/etc/hostname"
+    ]
+  },
+  {
+    "name": "Dummy",
+    "type": "DUMMY",
+    "attributes": [
+      "/etc/blah"
+    ]
+  },
+  {
+    "name": "OSReleaseCommand",
+    "type": "COMMAND",
+    "attributes": [
+      "cat",
+      "/etc/os-release"
+    ]
+  },
+  {
+    "name": "ListProcessesPsCommand",
+    "type": "COMMAND",
+    "attributes": [
+      "/bin/ps",
+      "-ef"
+    ]
+  },
+  {
+    "name": "NetstatCommand",
+    "type": "COMMAND",
+    "attributes": [
+      "netstat",
+      "-uta"
+    ]
+  },
+  {
+    "name": "LastCommand",
+    "type": "COMMAND",
+    "attributes": [
+      "last"
+    ]
+  }, 
+  {
+    "name": "LinuxAuthLogs",
+    "type": "FILE",
+    "attributes": [
+        "/var/log/auth.log*",
+        "/var/log/secure.log*"
+      ]
+  },
+  {
+    "name": "LinuxMessagesLogFiles",
+    "type": "FILE",
+    "attributes": ["/var/log/messages*"]
+  }
+]
