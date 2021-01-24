@@ -7,6 +7,22 @@ In addition, preserves AMI/EBS snapshot and executes EC2 instance containment pr
 # Architecture
 ![](https://github.com/gbernat/EC2_containment_and_forensics/blob/master/forensics_architecture_black.PNG)
 
+# Versions
+There are two deployment options available:<br><br>
+<b>commandline</b>
+<p>It is an all-in-one script that is run from a dedicated forensic system, whether an external computer or an EC2 instance.<br>
+The script takes command line arguments to perform selected containment and forensic tasks.
+</p>
+<b>lambda</b>
+<p>The tasks are splitted into two lambda functions:<br>
+- Instance's status preservation, AMI and/or EBS snapshot and containment procedure.<br>
+- Local EC2 evidence collection, including files, directories, commands output and memory dump.
+</p>
+<p>You can choose wich option best suits your needs.<br>
+They both use the same configuration and resources files, which must be uploaded to an S3 bucket.</p>
+
+<br>
+
 * Example Config file on S3
 ```json
 {
@@ -53,7 +69,7 @@ optional arguments:
                         containing all forensic files)
 ```
 
-* Usage script example and output:
+* Usage commandline script example and output:
 ```cmd
 $ python3 containmentAndForensicsEC2ToS3_lambda.py -id i-4857abcd0957dc81a --no-memory-dump --no-ami-snapshot --conserve-local-forensics
 
