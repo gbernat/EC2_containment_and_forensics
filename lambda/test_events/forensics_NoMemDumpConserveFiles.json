@@ -1,0 +1,7 @@
+{
+    "instance_id": "i-07a70000000000000",
+    "ec2_ip": "172.xx.xx.xx",
+    "no_memory_dump": true,
+    "conserve_local_forensics": true,
+    "no_send_to_s3": false
+  }
