@@ -8,8 +8,8 @@ import paramiko
 
 # Get script configuration parameters form S3 file. 
 # TODO If SSM is used, replace S3 conf for SSM parameters.
-S3_conf_bucket = 'my-conf-forensics'
-S3_conf_params = 'forensics/config/containmentAndForensicsEC2ToS3_conf.json'
+S3_conf_bucket = 'my-forensics'
+S3_conf_params = 'forensics/config/containmentAndForensicsEC2_conf.json'
 
 # S3_conf_params example:
 #{

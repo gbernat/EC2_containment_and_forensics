@@ -50,9 +50,6 @@ data "aws_iam_policy_document" "containment_and_forensics_policy_document" {
 
 }
 
-
-
-
 data "aws_iam_policy_document" "containment_and_forensics_assume_policy_document" {
   statement {
     principals {
@@ -63,3 +60,18 @@ data "aws_iam_policy_document" "containment_and_forensics_assume_policy_document
     actions = ["sts:AssumeRole"]
   }
 }
+
+
+
+data "archive_file" "instance_containment_pkg" {
+    type = "zip"
+    source_file = "../lambda/InstanceContainAndPreserveStatus.py"
+    output_path = "../lambda/packages/InstanceContainAndPreserveStatus.zip"
+}
+
+data "archive_file" "forensics_evidence_pkg" {
+    type = "zip"
+    source_dir = "../lambda/packages/paramiko_src/"
+    output_path = "../lambda/packages/EC2ForensicsEvidence.zip"
+}
+

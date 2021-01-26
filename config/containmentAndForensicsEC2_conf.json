@@ -3,7 +3,7 @@
     "S3_bucket": "my-forensics",
     "S3_resources": ["forensics/resources/artifacts.json", "forensics/resources/collectLocalForensics.py"],
     "S3_evidence_path": "forensics/evidence/",
-    "EC2_key": "forensics/config/EC2tutorial.pem",
+    "EC2_key": "forensics/config/EC2-key.pem",
     "ec2_local_user": "ec2-user",
     "isolation_security_groups": ["sg-09e9773906990d7bc","sg-adb43d7ebc40c2609"],
     "region": "sa-east-1"

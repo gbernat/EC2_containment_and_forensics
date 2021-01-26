@@ -38,3 +38,13 @@ resource "aws_s3_bucket_object" "config_ec2_key" {
   etag = filemd5(var.ec2_key)
   depends_on = [aws_s3_bucket.s3_containment_and_forensics]
 }
+
+# Only necessary for commandline version:
+resource "aws_s3_bucket_object" "config_json" {
+  bucket = var.forensics_S3_bucket_name
+  key    = "forensics/config/containmentAndForensicsEC2_conf.json"
+  source = "../config/containmentAndForensicsEC2_conf.json"
+
+  etag = filemd5("../config/containmentAndForensicsEC2_conf.json")
+  depends_on = [aws_s3_bucket.s3_containment_and_forensics]
+}
