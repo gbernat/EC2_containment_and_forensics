@@ -21,6 +21,11 @@ variable "vpc_id" {
     description = "VPC id"
 }
 
+variable "vpc_lambda_subnets" {
+    type = string
+    description = "List of subnets to be assigned to lambda ec2-forensics. i.e.: subnet-11111111,subnet-22222222"
+}
+
 variable "region" {
     default = "sa-east-1"
 }
