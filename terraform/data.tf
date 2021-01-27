@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "containment_and_forensics_policy_document" {
             "ec2:ModifyInstanceAttribute",
             "ec2:AssignPrivateIpAddresses",
             "ec2:UnassignPrivateIpAddresses",
+            "ec2:DescribeSecurityGroups",
         ]
 
         resources = ["*"]

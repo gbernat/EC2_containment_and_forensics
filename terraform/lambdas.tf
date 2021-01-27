@@ -30,6 +30,11 @@ resource "aws_lambda_function" "ec2-forensics" {
   filename         = data.archive_file.forensics_evidence_pkg.output_path
   source_code_hash = filebase64sha256(data.archive_file.forensics_evidence_pkg.output_path)
   
+  vpc_config {
+    subnet_ids = ["subnet-54294c0f"]
+    security_group_ids= [aws_security_group.lambda_access_to_ec2.id]
+  }
+
   environment {
     variables = {
       FORENSICS_BUCKET = var.forensics_S3_bucket_name

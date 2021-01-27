@@ -6,31 +6,15 @@ import os, shutil
 import json
 import paramiko
 
-# Get script configuration parameters form S3 file. 
-# TODO If SSM is used, replace S3 conf for SSM parameters.
-S3_conf_bucket = 'my-conf-forensics'
-S3_conf_params = 'forensics/config/containmentAndForensicsEC2ToS3_conf.json'
-
-# S3_conf_params example:
-#{
-#    "working_path": "/tmp/forensics/",
-#    "S3_bucket": "my-forensics",
-#    "S3_resources": ["forensics/resources/artifacts.json", "forensics/resources/collectLocalForensics.py"],
-#    "S3_evidence_path": "forensics/evidence/",
-#    "EC2_key": "forensics/config/EC2-key.pem",
-#    "ec2_local_user": "ec2-user",
-#    "isolation_security_groups": ["sg-09e9773906990d7bc","sg-adb43d7ebc40c2609"],
-#    "region": "sa-east-1"
-#}
-
-# Conf params to get from S3_conf_params (or SSM)
-working_path = None
-S3_bucket = None
-S3_resources = None
-S3_evidence_path = None
-EC2_key = None
-ec2_local_user = None
-region = None
+# Get script configuration parameters from lambda environment variables. 
+# TODO If SSM is used, replace env vars for SSM parameters.
+working_path = "/tmp/forensics/"
+S3_bucket = os.environ['FORENSICS_BUCKET']
+S3_resources = ["forensics/resources/artifacts.json", "forensics/resources/collectLocalForensics.py"]
+S3_evidence_path = os.environ['FORENSICS_EVIDENCE_PATH']
+S3_EC2_key = "forensics/config/EC2-key.pem"
+ec2_local_user = os.environ["EC2_LOCAL_USER"]
+region = os.environ['REGION']
 
 # Global variables
 s3_client = boto3.client('s3', region_name=region, config=botocore.config.Config(s3={'addressing_style':'path'}))
@@ -52,39 +36,14 @@ print("""
 ///////////////////////////////////////////////////////////////////////////////
 """)
 
-def get_config_params():
-    global working_path
-    global S3_bucket
-    global S3_resources
-    global S3_evidence_path
-    global ec2_local_user
-    global EC2_key
-    global region
-    print('Getting configuration parameters from S3: {}/{}\n'.format(S3_conf_bucket, S3_conf_params))
-    try:
-        confS3 = s3_client.get_object(Bucket= S3_conf_bucket, Key=S3_conf_params)
-        conf = json.loads(confS3['Body'].read().decode("utf-8")) 
-
-        working_path = conf['working_path']
-        S3_bucket = conf['S3_bucket']
-        S3_resources = conf['S3_resources']
-        S3_evidence_path= conf['S3_evidence_path']
-        ec2_local_user = conf['ec2_local_user']
-        region = conf['region']
-
-        # Put .pem ec2 key to local temp
-        EC2_key = local_tmp + os.path.basename(conf['EC2_key'])
-        s3_client.download_file(S3_conf_bucket, conf['EC2_key'], EC2_key)
-        # Change pem permissions to 0600
-        os.chmod(EC2_key, 0o600)
-
-    except Exception as e:
-        #TODO: Better error msg
-        print('[ERROR] {}'.format(str(e)))
-
-
 
 def forensics(tasks):
+    # Get .pem ec2 key from S3 and put it in local temp
+    EC2_key = local_tmp + os.path.basename(S3_EC2_key)
+    s3_client.download_file(S3_bucket, S3_EC2_key, EC2_key)
+    # Change pem permissions to 0600
+    os.chmod(EC2_key, 0o600)
+
     # ssh connection pre-steps
     key = paramiko.RSAKey.from_private_key_file(EC2_key)
     ssh_client = paramiko.SSHClient()
@@ -181,8 +140,6 @@ def main(params):
 
     print("I'm going to do this:\n"+str(params).replace('\'','').replace('{', '').replace('}','').replace(',','\n')+'\n')
 
-    get_config_params()
-
     forensics(params)
 
     shutil.rmtree(local_tmp)
@@ -220,30 +177,5 @@ def lambda_handler(event, context):
     }
 
     print('Starting for instance: ' + event['instance_id'])
-
-    main(argsh)
-
-
-
-
-# From command line arguments (not useful from lambda. Only for stand-alone tests):
-if __name__=='__main__':
-    my_parser = argparse.ArgumentParser()
-    my_parser.add_argument('-id', '--InstanceId', type=str, required=True, dest='instance_id', help='Instance id of the server to take forensics data from.')
-    my_parser.add_argument('--ec2-ip', type=str, required=True, dest='ec2_ip', help='Instance IP.')
-    my_parser.add_argument('--no-memory-dump', required=False, dest='no_memory_dump', action='store_true', help='Do not execute memory dump. --> default: false (make memory dump)')
-    my_parser.add_argument('--conserve-local-forensics', required=False, dest='conserve_forensics', action='store_true', help='Do not delete forensic files gathered in destination server after finishing tasks. --> default: false (delete tmp files in remote server)')
-    my_parser.add_argument('--no-send-to-S3', required=False, dest='no_send_to_s3', action='store_true', help='Do not copy forensic files to S3 bucket. --> default: false (copy forensic files to S3)')
-    my_parser.add_argument('--S3-data-format', required=False, dest='s3_data_format', type=str, choices=['individual', 'packed'], default='packed', action='store', help='Choose how forensic data is stored in S3, as an individual compressed file, or individually. --> default: packed (save one compressed file to S3 containing all forensic files)')
-    args = my_parser.parse_args()
-
-    argsh = { 
-        'instance_id': args.instance_id,
-        'ec2_ip': args.ec2_ip,
-        'memory_dump': not args.no_memory_dump,
-        'conserve_files': args.conserve_forensics,
-        'send_to_s3': not args.no_send_to_s3,
-        's3_data_format': args.s3_data_format
-    } 
 
     main(argsh)
