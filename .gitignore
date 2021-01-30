@@ -30,7 +30,7 @@ env.bak/
 venv.bak/
 
 #AWS
-lambda/packages/*
+lambda/packages/paramiko_src
 
 #Terraform
 **/.terraform/*

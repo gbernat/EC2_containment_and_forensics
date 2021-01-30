@@ -44,9 +44,7 @@ data "aws_iam_policy_document" "containment_and_forensics_policy_document" {
             "logs:PutLogEvents"
         ]
 
-        resources = [
-            "arn:aws:logs:sa-east-1:182649964521:log-group:/lambda/containment_and_forensics:*"
-        ]
+        resources = ["*"]
     }
 
 }
@@ -72,7 +70,8 @@ data "archive_file" "instance_containment_pkg" {
 
 data "archive_file" "forensics_evidence_pkg" {
     type = "zip"
-    source_dir = "../lambda/packages/paramiko_src/"
+    #source_dir = "../lambda/packages/paramiko_src/"
+    source_file = "../lambda/EC2ForensicsEvidence.py"
     output_path = "../lambda/packages/EC2ForensicsEvidence.zip"
 }
 

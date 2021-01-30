@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "instance-containment" {
-  function_name    = "instance-containment-2"
+  function_name    = "instance-containment"
   description      = "Instance containment and preserve status"
   handler          = "InstanceContainAndPreserveStatus.lambda_handler"
   memory_size      = 1024
@@ -18,9 +18,8 @@ resource "aws_lambda_function" "instance-containment" {
   }
 }
 
-# First copy lambda/EC2ForensicsEvidence.py to lambda/packages/paramiko_src/ !!!
 resource "aws_lambda_function" "ec2-forensics" {
-  function_name    = "ec2-forensics-2"
+  function_name    = "ec2-forensics"
   description      = "Get EC2 forensics files and memory dump"
   handler          = "EC2ForensicsEvidence.lambda_handler"
   memory_size      = 1024
@@ -30,6 +29,8 @@ resource "aws_lambda_function" "ec2-forensics" {
   filename         = data.archive_file.forensics_evidence_pkg.output_path
   source_code_hash = filebase64sha256(data.archive_file.forensics_evidence_pkg.output_path)
   
+  layers = [aws_lambda_layer_version.paramiko_272.arn]
+
   vpc_config {
     #subnet_ids = ["subnet-54294c0f"]
     subnet_ids = split(",", var.vpc_lambda_subnets) 
@@ -45,4 +46,13 @@ resource "aws_lambda_function" "ec2-forensics" {
     }
   }
 
+}
+
+
+# Layer additional libraries
+resource "aws_lambda_layer_version" "paramiko_272" {
+  filename   = "../lambda/packages/paramiko-2.7.2_src.zip"
+  layer_name = "paramiko_272"
+  compatible_runtimes = ["python3.7"]
+  source_code_hash = filebase64sha256("../lambda/packages/paramiko-2.7.2_src.zip")
 }
