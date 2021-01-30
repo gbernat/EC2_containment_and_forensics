@@ -4,9 +4,16 @@
 1.  $ git clone https://github.com/gbernat/EC2_containment_and_forensics
 2.  $ cd EC2_containment_and_forensics/terraform
 3.  Set variables as needed in the variables.tf and main.tf files
-4.  Get Paramiko module from pip, preferably downloada in a lambda environment compatible (i.e. Amazon Linux 2 AMI)<br>
-    $ pip install parmiko -t lambda/packages/paramiko_src<br>
-    Copy lambda/EC2ForensicsEvidence.py to lambda/packages/paramiko_src/
+4.  Get Paramiko module from pip, preferably downloaded in a lambda environment compatible (i.e. Amazon Linux 2 AMI)<br>
+    ```
+    $ mkdir paramiko_for_lambda_layer; cd paramiko_for_lambda_layer
+    $ mkdir python; cd python
+    $ pip3 install paramiko -t .
+    $ cd ..; zip -r /tmp/paramico-2.7.2_src.zip .
+    ```
+
+    Get the zip file and copy it to lambda/packages/<br>
+    >    Alternatively, don't do any of that and use the version provided of Paramiko in lambda/packages/paramiko-2.7.2_src.zip
 
 5.  $ terraform init
 6.  $ terraform plan
