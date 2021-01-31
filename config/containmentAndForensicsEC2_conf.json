@@ -5,6 +5,6 @@
     "S3_evidence_path": "forensics/evidence/",
     "EC2_key": "forensics/config/EC2-key.pem",
     "ec2_local_user": "ec2-user",
-    "isolation_security_groups": ["sg-09e9773906990d7bc","sg-adb43d7ebc40c2609"],
+    "isolation_security_groups": ["isolation_step1", "isolation"],
     "region": "sa-east-1"
 }

@@ -4,4 +4,4 @@
     "no_memory_dump": true,
     "conserve_local_forensics": true,
     "no_send_to_s3": false
-  }
+}

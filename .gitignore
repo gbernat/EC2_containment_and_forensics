@@ -31,6 +31,8 @@ venv.bak/
 
 #AWS
 lambda/packages/paramiko_src
+lambda/packages/EC2ForensicsEvidence.zip
+lambda/packages/InstanceContainAndPreserveStatus.zip
 
 #Terraform
 **/.terraform/*

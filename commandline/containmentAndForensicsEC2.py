@@ -147,11 +147,13 @@ def ec2_containment(Iid):
     # Remove original SGs and set very restrictive containment SG
     print('\nContainment - Removing SGs...')
     try:
-        print('-> Attaching SG {} (first step: change all connections to untracked)'.format(isolation_security_groups[0]))
-        res = ec2_client.modify_instance_attribute(InstanceId=Iid, Groups=[isolation_security_groups[0]])
+        sg_id = ec2_client.describe_security_groups(Filters=[ {'Name': 'group-name', 'Values': [isolation_security_groups[0]]} ])['SecurityGroups'][0]['GroupId']
+        print('-> Attaching SG {} - {} (first step: change all connections to untracked)'.format(isolation_security_groups[0], sg_id))
+        res = ec2_client.modify_instance_attribute(InstanceId=Iid, Groups=[sg_id])
         time.sleep(2)   # just wait 2 seconds...
-        print('-> Attaching SG {} (second step: dropping all connections with isolation SG)'.format(isolation_security_groups[1]))
-        res = ec2_client.modify_instance_attribute(InstanceId=Iid, Groups=[isolation_security_groups[1]])
+        sg_id = ec2_client.describe_security_groups(Filters=[ {'Name': 'group-name', 'Values': [isolation_security_groups[1]]} ])['SecurityGroups'][0]['GroupId']
+        print('-> Attaching SG {} - {} (second step: dropping all connections with isolation SG)'.format(isolation_security_groups[1], sg_id))
+        res = ec2_client.modify_instance_attribute(InstanceId=Iid, Groups=[sg_id])
         if res['ResponseMetadata']['HTTPStatusCode'] == 200:
             print('[OK] SGs removed\n')
         else:
