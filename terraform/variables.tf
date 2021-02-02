@@ -26,6 +26,12 @@ variable "vpc_lambda_subnets" {
     description = "List of subnets to be assigned to lambda ec2-forensics. i.e.: subnet-11111111,subnet-22222222"
 }
 
+variable "vpc_lambda_route_table" {
+    type = string
+    description = "Route table of the subnets assigned to the lambda function ec2-forensics. Here will be the route to the VPC Endpoint S3"
+}
+
+
 variable "region" {
     default = "sa-east-1"
 }

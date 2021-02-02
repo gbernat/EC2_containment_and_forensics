@@ -32,7 +32,6 @@ resource "aws_lambda_function" "ec2-forensics" {
   layers = [aws_lambda_layer_version.paramiko_272.arn]
 
   vpc_config {
-    #subnet_ids = ["subnet-54294c0f"]
     subnet_ids = split(",", var.vpc_lambda_subnets) 
     security_group_ids= [aws_security_group.lambda_access_to_ec2.id]
   }
